@@ -7,7 +7,8 @@ import service.library_pb2 as inventory_model_pb2
 import service.inventory_service_pb2 as inventory_service_pb2
 import service.inventory_service_pb2_grpc as inventory_service_pb2_grpc
 
-# Set of books in the library
+# Set of books in the library stored as a dictionary in-memory.
+# This serves as our 'database' or library of books.
 books = {
     '1900023189': {
         'isbn': '1900023189',
