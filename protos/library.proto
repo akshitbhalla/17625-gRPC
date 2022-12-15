@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+package inventory;
+
+message Status {
+  optional int32 code = 1;
+  optional string message = 2;
+  repeated google.protobuf.Any details = 3;
+}
+
+enum Genre {
+  FANTASY = 0;
+  MYSTERY = 1;
+  ADVENTURE = 2;
+  ROMANCE = 3;
+  THRILLER = 4;
+}
+
+enum InventoryStatus {
+  AVAILABLE = 0;
+  TAKEN = 1;
+}
+
+message Book {
+  optional string isbn = 1;
+  optional string title = 2;
+  optional string author = 3;
+  optional Genre genre = 4;
+  optional int32 year = 5;
+}
+
+message InventoryItem {
+  optional int32 number = 1;
+  oneof type {
+    Book book = 2;
+  }
+  optional InventoryStatus status = 3;
+}
