@@ -2,14 +2,17 @@ syntax = "proto3";
 
 import "google/protobuf/any.proto";
 
+// package inventory contains book details and its status in the library, as well as services
 package inventory;
 
+// Custom Status object as recommended by Google
 message Status {
   optional int32 code = 1;
   optional string message = 2;
-  repeated google.protobuf.Any details = 3;
+  repeated google.protobuf.Any details = 3; // used to send any extra details and help messages
 }
 
+// List of book genres available in the application
 enum Genre {
   FANTASY = 0;
   MYSTERY = 1;
@@ -18,11 +21,13 @@ enum Genre {
   THRILLER = 4;
 }
 
+// Status of book in library
 enum InventoryStatus {
   AVAILABLE = 0;
   TAKEN = 1;
 }
 
+// Book details
 message Book {
   optional string isbn = 1;
   optional string title = 2;
@@ -31,6 +36,7 @@ message Book {
   optional int32 year = 5;
 }
 
+// Inventory object and status
 message InventoryItem {
   optional int32 number = 1;
   oneof type {

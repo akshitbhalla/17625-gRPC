@@ -4,24 +4,29 @@ import "library.proto";
 
 package inventory;
 
+// services available for Inventory
 service InventoryService {
   rpc CreateBook(CreateBookRequest) returns (CreateBookReply);
   rpc GetBook(GetBookRequest) returns (GetBookReply);
 }
 
+// RPC request for CreatBook Request message
 message CreateBookRequest {
   optional Book book = 1;
 }
 
+// RPC request for CreatBook Reply message
 message CreateBookReply {
   optional Status status = 1;
   optional string message = 2;
 }
 
+// RPC request for GetBook Request message
 message GetBookRequest {
   optional string isbn = 1;
 }
 
+// RPC request for GetBook Reply message
 message GetBookReply {
   optional Status status = 1;
   optional Book book = 2;

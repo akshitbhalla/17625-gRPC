@@ -7,6 +7,7 @@ import service.library_pb2 as inventory_model_pb2
 import service.inventory_service_pb2 as inventory_service_pb2
 import service.inventory_service_pb2_grpc as inventory_service_pb2_grpc
 
+# Set of books in the library
 books = {
     '1900023189': {
         'isbn': '1900023189',
@@ -32,7 +33,9 @@ books = {
 }
 
 
+# Servicer with implementations for the Inventory Service
 class InventoryServiceServicer(inventory_service_pb2_grpc.InventoryServiceServicer):
+    # possible statuses returned on RPCs
     status_invalid = inventory_model_pb2.Status(
         code=grpc.StatusCode.INVALID_ARGUMENT.value[0],
         message=grpc.StatusCode.INVALID_ARGUMENT.name
@@ -49,19 +52,20 @@ class InventoryServiceServicer(inventory_service_pb2_grpc.InventoryServiceServic
         code=grpc.StatusCode.OK.value[0],
     )
 
+    # CreateBook implementation for adding a new book to the library
     def CreateBook(self, request, context):
         if not request.HasField('book'):
             return inventory_service_pb2.CreateBookReply(message="Missing new book details",
-                                                            status=self.status_invalid)
+                                                         status=self.status_invalid)
         new_book = request.book
 
         if new_book.isbn == "" or new_book.title == "":
             return inventory_service_pb2.CreateBookReply(message="Missing ISBN or Title",
-                                                            status=self.status_invalid)
+                                                         status=self.status_invalid)
 
         if new_book.isbn in books.keys():
             return inventory_service_pb2.CreateBookReply(message="Duplicate book",
-                                                            status=self.status_exists)
+                                                         status=self.status_exists)
 
         books[request.book.isbn] = {
             'isbn': new_book.isbn,
@@ -74,6 +78,7 @@ class InventoryServiceServicer(inventory_service_pb2_grpc.InventoryServiceServic
         return inventory_service_pb2.CreateBookReply(message="Added book",
                                                      status=self.status_success)
 
+    # GetBook implementation for getting a book from the library
     def GetBook(self, request, context):
         if request.isbn == "":
             return inventory_service_pb2.GetBookReply(status=self.status_invalid)
@@ -84,6 +89,7 @@ class InventoryServiceServicer(inventory_service_pb2_grpc.InventoryServiceServic
         return inventory_service_pb2.GetBookReply(status=self.status_success, book=books[request.isbn])
 
 
+# serve function contains details for starting the server
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     inventory_service_pb2_grpc.add_InventoryServiceServicer_to_server(InventoryServiceServicer(), server)
@@ -97,5 +103,6 @@ def serve():
     server.wait_for_termination()
 
 
+# starting point for the application
 if __name__ == "__main__":
     serve()
