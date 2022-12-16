@@ -3,7 +3,7 @@ from concurrent import futures
 
 import grpc
 
-import service.library_pb2 as inventory_model_pb2
+import service.library_pb2 as library_pb2
 import service.inventory_service_pb2 as inventory_service_pb2
 import service.inventory_service_pb2_grpc as inventory_service_pb2_grpc
 
@@ -37,19 +37,19 @@ books = {
 # Servicer with implementations for the Inventory Service
 class InventoryServiceServicer(inventory_service_pb2_grpc.InventoryServiceServicer):
     # possible statuses returned on RPCs
-    status_invalid = inventory_model_pb2.Status(
+    status_invalid = library_pb2.Status(
         code=grpc.StatusCode.INVALID_ARGUMENT.value[0],
         message=grpc.StatusCode.INVALID_ARGUMENT.name
     )
-    status_exists = inventory_model_pb2.Status(
+    status_exists = library_pb2.Status(
         code=grpc.StatusCode.ALREADY_EXISTS.value[0],
         message=grpc.StatusCode.ALREADY_EXISTS.name
     )
-    status_notfound = inventory_model_pb2.Status(
+    status_notfound = library_pb2.Status(
         code=grpc.StatusCode.NOT_FOUND.value[0],
         message=grpc.StatusCode.NOT_FOUND.name
     )
-    status_success = inventory_model_pb2.Status(
+    status_success = library_pb2.Status(
         code=grpc.StatusCode.OK.value[0],
     )
 
@@ -72,7 +72,7 @@ class InventoryServiceServicer(inventory_service_pb2_grpc.InventoryServiceServic
             'isbn': new_book.isbn,
             'author': new_book.author,
             'title': new_book.title,
-            'genre': inventory_model_pb2.Genre.Name(new_book.genre),
+            'genre': library_pb2.Genre.Name(new_book.genre),
             'year': new_book.year
         }
 
